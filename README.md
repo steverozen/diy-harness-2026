@@ -89,10 +89,23 @@ Ctrl-D or Ctrl-C exits.
 | `2026-06-01-diy-harness-summary.md` | Summary of what was learned building it |
 | `conversation-dump.md` | An example session transcript |
 | `hello.py` | A toy file to point the agent at |
+| `examples/` | Configs pointing real agent CLIs at the same endpoint (see below) |
 
 The `.py` files are generated from the `.qmd` sources, which is why they still
 carry `#| eval: true` cell markers. Edit the `.qmd` if you want a change to
 survive re-export.
+
+## Pointing real agent CLIs at the same endpoint
+
+Part of the lesson is that production agent CLIs are the same loop with a nicer
+interface, and you can point them at the very same OpenAI-compatible endpoint
+this harness uses. `examples/` holds two working configs (with the API key read
+from the `DUKE_LITELLM_API_KEY` environment variable, never stored in the file):
+
+| File | Install as | Run with |
+|---|---|---|
+| `examples/codex-duke.config.toml` | `~/.codex/duke.config.toml` | `codex --profile duke` |
+| `examples/opencode-duke.jsonc` | `~/.config/opencode/opencode.jsonc` | `opencode` |
 
 ## Caveats
 

@@ -1,0 +1,23 @@
+# Example: point the OpenAI Codex CLI at the Duke AI Proxy (LiteLLM),
+# the same OpenAI-compatible endpoint used by duke-diy-harness.py.
+#
+# Codex keeps per-profile config in its own file. Install this as:
+#     ~/.codex/duke.config.toml
+# then run:
+#     codex --profile duke
+#     codex --profile duke -m glm-5.2      # override the model
+#
+# The API key is NOT stored here. Codex reads it from the environment
+# variable named by env_key, so export it in your shell profile:
+#     export DUKE_LITELLM_API_KEY=...      # never commit the actual key
+
+model_provider = "duke"
+model = "gpt-5.3-codex"
+
+[model_providers.duke]
+name = "Duke AI Proxy"
+base_url = "https://aiproxy.duhs.duke.edu/v1"
+env_key = "DUKE_LITELLM_API_KEY"
+# The Duke proxy serves gpt-5.3-codex in Responses-API mode.
+# Recent Codex versions no longer support wire_api = "chat".
+wire_api = "responses"

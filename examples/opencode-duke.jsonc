@@ -1,0 +1,33 @@
+{
+  // Example: point opencode at the Duke AI Proxy (LiteLLM), the same
+  // OpenAI-compatible endpoint used by duke-diy-harness.py.
+  //
+  // Install this as:  ~/.config/opencode/opencode.jsonc
+  //
+  // The API key is NOT stored here. The "{env:...}" placeholder makes
+  // opencode read it from the environment, so export it in your shell:
+  //     export DUKE_LITELLM_API_KEY=...   // never commit the actual key
+  "$schema": "https://opencode.ai/config.json",
+
+  "provider": {
+    "duke": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Duke AI Proxy",
+      "options": {
+        "baseURL": "https://aiproxy.duhs.duke.edu/v1",
+        "apiKey": "{env:DUKE_LITELLM_API_KEY}"
+      },
+      // A short illustrative subset. For the full list, query
+      // https://aiproxy.duhs.duke.edu/v1/models with your key.
+      "models": {
+        "gpt-5.3-codex": { "name": "GPT-5.3 Codex (Duke)" },
+        "gpt-5-mini": { "name": "GPT-5 mini (Duke)" },
+        "glm-5.2": { "name": "GLM-5.2 (Duke)" },
+        "kimi-K2.7-code": { "name": "Kimi K2.7 Code (Duke)" }
+      }
+    }
+  },
+
+  "model": "duke/gpt-5.3-codex",
+  "small_model": "duke/gpt-5-mini"
+}
