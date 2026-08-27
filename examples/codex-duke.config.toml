@@ -5,14 +5,27 @@
 #     ~/.codex/duke.config.toml
 # then run:
 #     codex --profile duke
-#     codex --profile duke -m glm-5.2      # override the model
+#     codex --profile duke -m gpt-5.3-codex   # override the model
 #
 # The API key is NOT stored here. Codex reads it from the environment
 # variable named by env_key, so export it in your shell profile:
 #     export DUKE_LITELLM_API_KEY=...      # never commit the actual key
 
 model_provider = "duke"
-model = "gpt-5.3-codex"
+model = "glm-5.2"
+model_reasoning_effort = "medium"
+
+# Optional: make the /model picker show Duke models instead of the
+# built-in OpenAI catalog. model_catalog_json REPLACES the entire model
+# list for this profile. The schema is strict, with many required fields
+# beyond slug/display_name/description, so the practical recipe is to
+# copy an entry from Codex's own cached catalog (~/.codex/models_cache.json),
+# then edit slug, display_name, description, and priority for each Duke
+# model you want listed.
+#
+#     model_catalog_json = "/home/YOU/.codex/model-catalogs/duke.json"
+#
+# The catalog file looks like: {"models": [ { "slug": "glm-5.2", ... }, ... ]}
 
 [model_providers.duke]
 name = "Duke AI Proxy"
