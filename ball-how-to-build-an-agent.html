@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+		/>
+		<style>
+			:root {
+				color-scheme: dark light;
+				--amp-shell-light-background-color: #fafaf8;
+				--amp-shell-dark-background-color: #0b0d0b;
+			}
+
+			html,
+			body {
+				background-color: var(--amp-shell-light-background-color);
+			}
+
+			@media (prefers-color-scheme: dark) {
+				html,
+				body {
+					background-color: var(--amp-shell-dark-background-color);
+				}
+			}
+		</style>
+		<link rel="manifest" href="/site.webmanifest" />
+		<link rel="apple-touch-icon" href="/app-icon-1024.png" />
+		<meta name="apple-mobile-web-app-title" content="Amp" />
+		<meta name="mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<link rel="icon" href="/amp-mark-color.svg" data-amp-favicon />
+		<!--12qhfyh--><!--[!--><!--]--> <!--[!--><!--]--> <!--[!--><!--]--> <meta property="og:title" content="How to Build an Agent"/> <!--[!--><!--]--> <!--[!--><!--]--> <meta name="twitter:site" content="@ampcode"/> <link rel="alternate" type="application/rss+xml" title="Amp News RSS Feed" href="/news.rss"/> <link rel="alternate" type="application/rss+xml" title="Raising an Agent Podcast" href="/podcast.rss"/> <link rel="dns-prefetch" href="https://static.ampcode.com"/><!----><!--16u2rkg--><script>
+		globalThis.addEventListener('beforeinstallprompt', (event) => {
+			const normalizedUserAgent = navigator.userAgent.toLowerCase()
+			const mobile =
+				/iphone|ipad|ipod|android/.test(normalizedUserAgent) ||
+				(navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+			if (location.pathname === '/install/app' || mobile) {
+				event.preventDefault()
+			}
+			globalThis.installPromptEvent = event
+		})
+	</script><!----><!----><!--pxsw9r--><meta property="og:type" content="article"/> <meta property="og:image" content="https://ampcode.com/og-how-to-build-an-agent.jpg"/><!----><!--1bsnhax--><meta name="viewport" content="width=device-width, initial-scale=1.0"/> <link rel="preload" href="/fonts/SagittaireDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous"/> <link rel="preload" href="/fonts/SagittaireDisplay-ExtralightItalic.woff2" as="font" type="font/woff2" crossorigin="anonymous"/><!----><!--1fb5ndm--><meta property="og:description" content="Building a fully functional, code-editing agent in less than 400 lines."/> <meta property="og:image" content="https://ampcode.com/og-how-to-build-an-agent.jpg"/> <meta property="og:type" content="article"/> <meta name="twitter:image" content="https://ampcode.com/og-how-to-build-an-agent.jpg"/> <meta name="twitter:card" content="summary_large_image"/> <meta name="twitter:creator" content="@thorstenball"/><!----><title>Amp</title>
+		<link href="/_app/immutable/assets/sonner.D-_aMiLC.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/keyboard-shortcuts.DEHGS27e.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/app.ef14mDKn.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/terminal-modal.BCQrSdgB.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/marketing-layout.Bk_BpqjG.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/recommended-reading.B5f5L6PV.css" rel="stylesheet">
+		<link href="/_app/immutable/assets/note-layout.CBUgVFgw.css" rel="stylesheet">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents"><!--[--><!--[--><!----><!----> <!--[!--><!--]--> <!----><!--[--><!--[--><!----><!--[--><div class=" fixed top-1 right-3.5 z-50"><!----><!----><!--$s1--><!--[!--><button class="w-12 h-12 flex items-center justify-center touch-manipulation focus-visible:outline-none opacity-60 hover:opacity-100 mt-1 " aria-label="Toggle menu" id="bits-s1" aria-haspopup="dialog" aria-expanded="false" data-state="closed" data-popover-trigger="" type="button"><svg viewBox="0 0 24 24" width="24" height="24" class="h-6 w-6 transition-transform duration-150 opacity-80 "><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9l6 6l6-6"></path></svg><!----></button><!--]--><!----><!----> <!----><!----><!--[!--><!--]--><!----><!----><!----><!----><!----><!----></div><!--]--> <div class="background-grid  svelte-vre9z4" aria-hidden="true"><svg class="background-grid-svg svelte-vre9z4" preserveAspectRatio="none"><line class="bg-grid-rail-line svelte-vre9z4" data-rail="margin-left"></line><line class="bg-grid-rail-line svelte-vre9z4" data-rail="1-2"></line><line class="bg-grid-rail-line svelte-vre9z4" data-rail="2-3"></line><line class="bg-grid-rail-line svelte-vre9z4" data-rail="3-4"></line><line class="bg-grid-rail-line svelte-vre9z4" data-rail="4-5"></line><line class="bg-grid-rail-line svelte-vre9z4" data-rail="margin-right"></line></svg></div><!----> <!--[!--><!--]--><!----> <div id="marketing-root" class="transition-opacity duration-150 relative min-h-screen flex flex-col svelte-1bsnhax"><!--[--><!--[--><nav class="grid-container items-center grid-section--dense"><a href="/" class="cell-pad justify-self-start self-center py-0 rail-tick-start"><!--[!--><svg class="h-[32px]" viewBox="0 0 281 144" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M236.014 20C260.431 20.0001 280.602 37.4115 280.603 64.7432C280.602 93.5337 260.065 114.166 233.52 114.166C224.158 114.166 215.639 112.422 208.63 108.49C202.886 105.27 198.203 100.605 194.919 94.3379L188.115 141.822L187.946 143.016H174.214L174.448 141.423L191.772 22.4941H205.372L203.937 31.3369C212.143 23.8608 223.2 20.0002 236.014 20ZM47.082 20.1543C56.4435 20.1543 65.0012 21.8991 72.0488 25.8486C77.8222 29.0831 82.5323 33.7713 85.8271 40.085L88.1201 23.6924L88.2861 22.4932H101.863L89.1611 110.633L88.9873 111.826H75.4092L76.7227 102.855C68.5854 110.456 57.3981 114.323 44.5889 114.323C20.1709 114.323 0.000167223 96.9087 0 69.5771C0.000149745 40.7854 20.54 20.1549 47.082 20.1543ZM116.234 110.636L116.061 111.827H102.485L115.351 23.6855L115.521 22.4941H129.083L116.234 110.636ZM140.673 110.636L140.499 111.827H126.924L139.789 23.6855L139.96 22.4941H153.521L140.673 110.636ZM177.958 22.4941L165.108 110.636L164.935 111.827H151.36L164.225 23.6855L164.396 22.4941H177.958ZM48.4854 31.9844C27.8638 31.985 14.0133 48.3799 14.0127 68.9521C14.0127 77.7907 16.8094 86.1771 22.3145 92.334C27.7973 98.4657 36.0631 102.493 47.2402 102.493C67.8534 102.493 81.7122 85.9487 81.7129 65.3682C81.7129 55.4076 78.2493 47.0792 72.4131 41.2441C66.5794 35.4088 58.2871 31.9844 48.4854 31.9844ZM233.362 31.8291C212.749 31.8297 198.89 48.3716 198.89 68.9521C198.89 78.9123 202.356 87.2403 208.189 93.0742C214.023 98.9107 222.315 102.336 232.116 102.336C252.738 102.335 266.589 85.9407 266.59 65.3682C266.59 56.5296 263.795 48.1424 258.29 41.9863C252.807 35.8551 244.542 31.8291 233.362 31.8291Z"></path></svg><!--]--><!----></a> <div class="cell-pad col-span-full cell-pad--stroke-context lg:col-start-2 lg:col-span-3 flex items-center py-0 pb-2 sm:pb-0 overflow-x-auto whitespace-nowrap" style="mask-image: linear-gradient(to right, #000 95%, transparent 100%); -webkit-mask-image: linear-gradient(to right, #000 95%, transparent 100%);"><a href="/chronicle" class="font-mono rail-tick-start font-bold uppercase text-sm text-muted-foreground hover:text-foreground transition-colors tracking-wide shrink-0">Chronicle</a> <span class="font-sagittaire-text italic text-muted-foreground/50 normal-case mx-2 shrink-0">//</span> <span class="font-mono font-bold uppercase text-sm text-muted-foreground tracking-wide"><span class="opacity-30">[</span>Note<span class="opacity-30">]</span><!--[--> How to Build an Agent<!--]--></span></div></nav><!----><!--]--><!--]--> <div class="flex-1 min-h-0 flex flex-col"><!--[!--><!--]--> <div class="article-layout grid-container svelte-16bbivr"><div class="grid-section col-span-full grid grid-cols-subgrid"><div class="article-cell cell-pad cell-pad--stroke-context col-span-full md:col-span-3 lg:col-start-2 lg:col-span-4 svelte-16bbivr"><div class="prose dark:prose-invert prose-lg max-w-[700px] prose-p:text-lg prose-ul:text-lg prose-ol:text-lg prose-p:leading-snug prose-ul:leading-snug prose-ol:leading-snug prose-blockquote:leading-snug prose-blockquote:border-[color-mix(in_srgb,var(--muted-foreground)_25%,transparent)] prose-blockquote:text-muted-foreground prose-h2:mt-12 prose-h2:mb-6 prose-h2:text-2xl prose-h2:font-medium prose-pre:mt-6 prose-pre:mb-8 prose-kbd:text-muted-foreground [&amp;>h1:first-child]:font-sagittaire-display [&amp;>h1:first-child]:tracking-tight [&amp;>h1:first-child]:text-7xl [&amp;>h1:first-child]:md:text-8xl [&amp;>h1:first-child]:leading-none [&amp;>h1:first-child]:mt-3 [&amp;>h1:first-child]:mb-1 [&amp;>h1:first-child]:text-foreground [&amp;>h1+h2]:font-sagittaire-display [&amp;>h1+h2]:font-medium [&amp;>h1+h2]:italic [&amp;>h1+h2]:text-4xl [&amp;>h1+h2]:mt-1 [&amp;>h2:not(h1+h2)]:font-sagittaire-display [&amp;>h2:not(h1+h2)]:tracking-tight [&amp;>h2:not(h1+h2)]:text-3xl [&amp;>h2:not(h1+h2)]:mb-4"><!--[--><!--[!--><!----><header class="not-prose"><p class="font-mono font-medium uppercase tracking-wide text-muted-foreground text-sm mb-12 rail-tick-start">Thorsten Ball<span class="font-sagittaire-text italic normal-case mx-2">//</span>April 15, 2025</p> <h1 class="font-sagittaire-display tracking-tight text-5xl md:text-7xl lg:text-8xl !leading-[0.8] mb-4">How <span class="italic">to</span> Build <span class="italic">an</span> Agent</h1> <p class="font-sagittaire-display italic text-3xl text-muted-foreground mt-1">or: The Emperor Has No Clothes</p></header> <div class="mt-8"></div> <p>It’s not that hard to build a fully functioning, code-editing agent.</p> <p>It seems like it would be. When you look at an agent editing files, running commands, wriggling itself out of errors, retrying different strategies - it seems like there has to be a secret behind it.</p> <p>There isn’t. It’s an LLM, a loop, and enough tokens. It’s what we’ve been saying on the <a href="/podcast">podcast</a> from the start. The rest, the stuff that makes <a href="/">Amp</a> so addictive and impressive? Elbow grease.</p> <p>But building a small and yet highly impressive agent doesn’t even require that. You can do it in less than 400 lines of code, most of which is boilerplate.</p> <p>I’m going to show you how, right now. We’re going to write some code together and go from zero lines of code to “oh wow, this is… a game changer.”</p> <p>I <em>urge</em> you to follow along. No, really. You might think you can just read this and that you don’t have to type out the code, but it’s less than 400 lines of code. I need you to <em>feel</em> how little code it is and I want you to see this with your own eyes in your own terminal in your own folders.</p> <p>Here’s what we need:</p> <ul><li><a href="https://go.dev/" rel="nofollow">Go</a></li> <li><a href="https://console.anthropic.com/settings/keys" rel="nofollow">Anthropic API key</a> that you set as an environment variable, <code>ANTHROPIC_API_KEY</code></li></ul> <h2>Pencils out!</h2> <p>Let’s dive right in and get ourselves a new Go project set up in four easy commands:</p> <pre class="language-shell"><code class="language-shell"><span class="token function">mkdir</span> code-editing-agent
+<span class="token builtin class-name">cd</span> code-editing-agent
+go mod init agent
+<span class="token function">touch</span> main.go</code></pre> <p>Now, let’s open <code>main.go</code> and, as a first step, put a skeleton of things we need in it:</p> <pre class="language-go"><code class="language-go"><span class="token keyword">package</span> main
+
+<span class="token keyword">import</span> <span class="token punctuation">(</span>
+	<span class="token string">"bufio"</span>
+	<span class="token string">"context"</span>
+	<span class="token string">"fmt"</span>
+	<span class="token string">"os"</span>
+
+	<span class="token string">"github.com/anthropics/anthropic-sdk-go"</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	client <span class="token operator">:=</span> anthropic<span class="token punctuation">.</span><span class="token function">NewClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+	scanner <span class="token operator">:=</span> bufio<span class="token punctuation">.</span><span class="token function">NewScanner</span><span class="token punctuation">(</span>os<span class="token punctuation">.</span>Stdin<span class="token punctuation">)</span>
+	getUserMessage <span class="token operator">:=</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token keyword">if</span> <span class="token operator">!</span>scanner<span class="token punctuation">.</span><span class="token function">Scan</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+			<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> <span class="token boolean">false</span>
+		<span class="token punctuation">}</span>
+		<span class="token keyword">return</span> scanner<span class="token punctuation">.</span><span class="token function">Text</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">true</span>
+	<span class="token punctuation">}</span>
+
+	agent <span class="token operator">:=</span> <span class="token function">NewAgent</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>client<span class="token punctuation">,</span> getUserMessage<span class="token punctuation">)</span>
+	err <span class="token operator">:=</span> agent<span class="token punctuation">.</span><span class="token function">Run</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">TODO</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"Error: %s\n"</span><span class="token punctuation">,</span> err<span class="token punctuation">.</span><span class="token function">Error</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token function">NewAgent</span><span class="token punctuation">(</span>client <span class="token operator">*</span>anthropic<span class="token punctuation">.</span>Client<span class="token punctuation">,</span> getUserMessage <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">bool</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">*</span>Agent <span class="token punctuation">{</span>
+	<span class="token keyword">return</span> <span class="token operator">&amp;</span>Agent<span class="token punctuation">{</span>
+		client<span class="token punctuation">:</span>         client<span class="token punctuation">,</span>
+		getUserMessage<span class="token punctuation">:</span> getUserMessage<span class="token punctuation">,</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">type</span> Agent <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+	client         <span class="token operator">*</span>anthropic<span class="token punctuation">.</span>Client
+	getUserMessage <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">bool</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span></code></pre> <p>Yes, this doesn’t compile yet.  But what we have here is an <code>Agent</code> that has access to an <code>anthropic.Client</code> (which, by default, looks for <code>ANTHROPIC_API_KEY</code>) and that can get a user message by reading from stdin on the terminal.</p> <p>Now let’s add the missing <code>Run()</code> method:</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>a <span class="token operator">*</span>Agent<span class="token punctuation">)</span> <span class="token function">Run</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">{</span>
+	conversation <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>anthropic<span class="token punctuation">.</span>MessageParam<span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"Chat with Claude (use 'ctrl-c' to quit)"</span><span class="token punctuation">)</span>
+
+	<span class="token keyword">for</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Print</span><span class="token punctuation">(</span><span class="token string">"\\u001b[94mYou\\u001b[0m: "</span><span class="token punctuation">)</span>
+		userInput<span class="token punctuation">,</span> ok <span class="token operator">:=</span> a<span class="token punctuation">.</span><span class="token function">getUserMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+		<span class="token keyword">if</span> <span class="token operator">!</span>ok <span class="token punctuation">{</span>
+			<span class="token keyword">break</span>
+		<span class="token punctuation">}</span>
+
+		userMessage <span class="token operator">:=</span> anthropic<span class="token punctuation">.</span><span class="token function">NewUserMessage</span><span class="token punctuation">(</span>anthropic<span class="token punctuation">.</span><span class="token function">NewTextBlock</span><span class="token punctuation">(</span>userInput<span class="token punctuation">)</span><span class="token punctuation">)</span>
+		conversation <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>conversation<span class="token punctuation">,</span> userMessage<span class="token punctuation">)</span>
+
+		message<span class="token punctuation">,</span> err <span class="token operator">:=</span> a<span class="token punctuation">.</span><span class="token function">runInference</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> conversation<span class="token punctuation">)</span>
+		<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+			<span class="token keyword">return</span> err
+		<span class="token punctuation">}</span>
+		conversation <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>conversation<span class="token punctuation">,</span> message<span class="token punctuation">.</span><span class="token function">ToParam</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+		<span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> content <span class="token operator">:=</span> <span class="token keyword">range</span> message<span class="token punctuation">.</span>Content <span class="token punctuation">{</span>
+			<span class="token keyword">switch</span> content<span class="token punctuation">.</span>Type <span class="token punctuation">{</span>
+			<span class="token keyword">case</span> <span class="token string">"text"</span><span class="token punctuation">:</span>
+				fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"\\u001b[93mClaude\\u001b[0m: %s\n"</span><span class="token punctuation">,</span> content<span class="token punctuation">.</span>Text<span class="token punctuation">)</span>
+			<span class="token punctuation">}</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
+
+	<span class="token keyword">return</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>a <span class="token operator">*</span>Agent<span class="token punctuation">)</span> <span class="token function">runInference</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">,</span> conversation <span class="token punctuation">[</span><span class="token punctuation">]</span>anthropic<span class="token punctuation">.</span>MessageParam<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token operator">*</span>anthropic<span class="token punctuation">.</span>Message<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	message<span class="token punctuation">,</span> err <span class="token operator">:=</span> a<span class="token punctuation">.</span>client<span class="token punctuation">.</span>Messages<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> anthropic<span class="token punctuation">.</span>MessageNewParams<span class="token punctuation">{</span>
+		Model<span class="token punctuation">:</span>     anthropic<span class="token punctuation">.</span>ModelClaude3_7SonnetLatest<span class="token punctuation">,</span>
+		MaxTokens<span class="token punctuation">:</span> <span class="token function">int64</span><span class="token punctuation">(</span><span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+		Messages<span class="token punctuation">:</span>  conversation<span class="token punctuation">,</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token keyword">return</span> message<span class="token punctuation">,</span> err
+<span class="token punctuation">}</span></code></pre> <p>It’s not a lot, is it? 90 lines and the most important thing in them is this loop in <code>Run()</code> that lets us talk to Claude. But that’s already the heartbeat of this program.</p> <p>And for a heartbeat, it’s pretty straightforward: we first print a prompt, ask the user to type something, add it to the conversation, send it to Claude, add Claude’s response to the conversation, print the response, and around we go.</p> <p>This is every AI chat application you’ve ever used, except it’s in the terminal.</p> <p>Let’s run it:</p> <pre class="language-shell"><code class="language-shell"><span class="token builtin class-name">export</span> <span class="token assign-left variable">ANTHROPIC_API_KEY</span><span class="token operator">=</span><span class="token string">"this is the last time i will tell you to set this"</span>
+
+<span class="token comment"># Download the dependencies</span>
+go mod tidy
+<span class="token comment"># Run it</span>
+go run main.go</code></pre> <p>Then you can just talk to Claude, like this:</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: Hey! I'm Thorsten! How are you?</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: Hi Thorsten! I'm doing well, thanks for asking. It's nice to meet you. How are you doing today? Is there something I can help you with?</span></div><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: Can you come up with any horse-related nicknames that make fun of my first name?</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I can try to come up with some playful horse-related nicknames based on "Thorsten":
+
+* Thorough-bred Thorsten
+* Trotsten
+* Thorsten the Stallion
+* Neighsten
+* Horseten
+* Thorsten the Galloper
+* Saddle-sten
+* Thorsten of the Mane
+* Canter-sten
+* Thorsteed
+
+These are meant to be lighthearted - I hope they give you a chuckle!</span></div><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: </span></div><!--]--></div><!----> <p>Notice how we kept the same conversation going over multiple turns. It remembers my name from the first message. The <code>conversation</code> grows longer with every turn and we send the whole conversation every time. The server — Anthropic’s server — is stateless. It only sees what’s in the <code>conversation</code> slice. It’s up to us to maintain that.</p> <p>Okay, let’s move on, because the nicknames suck and this is not an agent yet. What’s an agent? Here’s <a href="https://youtu.be/J1-W9O3n7j8?t=72" rel="nofollow">my definition</a>: an LLM with <em>access to tools</em>, giving it the ability to modify something outside the context window.</p> <h2>A First Tool</h2> <p>An LLM with <em>access to tools</em>? What’s a tool? The basic idea is this: you send a prompt to the model that says it should reply in a certain way if it wants to use “a tool”. Then you, as the receiver of that message, “use the tool” by executing it and replying with the result. That’s it. Everything else we’ll see is just abstraction on top of it.</p> <p>Imagine you’re talking to a friend and you tell them: “in the following conversation, wink if you want me to raise my arm”. Weird thing to say, but an easy concept to grasp.</p> <p>We can already try it without changing any of our code.</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: You are a weather expert. When I ask you about the weather in a given location, I want you to reply with `get_weather(&lt;location_name>)`. I will then tell you what the weather in that location is. Understood?</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I understand your instructions. When you ask me about the weather in a specific location, I will reply with `get_weather(&lt;location_name>)`. Then you'll provide me with the weather information for that location, and I can discuss it further with you. I'm ready whenever you'd like to ask about the weather somewhere.</span></div><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: Hey, what's the weather in Munich?</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: get_weather(Munich)</span></div><!--]--></div><!----> <p>We told Claude to wink with <code>get_weather</code> when it wants to know about the weather. The next step is to raise our arm and reply with “result of the tool”:</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[!--><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: hot and humid, 28 degrees celcius</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: Thank you for providing that information. The current weather in Munich is hot and humid at 28 degrees Celsius (about 82 degrees Fahrenheit). These are fairly warm conditions for Munich, especially with the added humidity which can make it feel even warmer than the temperature indicates.
+
+If you're in Munich or planning to visit, it would be good to stay hydrated, wear light clothing, and perhaps plan indoor activities during the hottest parts of the day. The combination of heat and humidity can be quite uncomfortable, particularly if you're not accustomed to such weather.
+
+Would you like to know about the weather in any other location?</span></div><!--]--></div><!----> <p>That worked very well, on first try, didn’t it?</p> <p>These models are trained and fine-tuned to use “tools” and they’re very eager to do so. By now, 2025, they kinda “know” that they don’t know everything and can use tools to get more information. (Of course that’s not precisely what’s going on, but it’s good enough an explanation for now.)</p> <p>To summarize, all there is to tools and tool use are two things:</p> <ol><li>You tell the model what tools are available</li> <li>When the model wants to execute the tool, it tells you, you execute the tool and send the response up</li></ol> <p>To make (1) easier, the big model providers have built-in APIs to send tool definitions along.</p> <p>Okay, now let’s build our first tool: <code>read_file</code></p> <h2>The <code>read_file</code> tool</h2> <p>In order to define the <code>read_file</code> tool, we’re going to use the types that the Anthropic SDK suggests, but keep in mind: under the hood, this will all end up as strings that are sent to the model. It’s all “wink if you want me to use <code>read_file</code>“.</p> <p>Each tool we’re going to add will require the following:</p> <ul><li>A name</li> <li>A description to tell the model what the tool does, when to use it, when to not use it, what it returns and so on</li> <li>An input schema that describes, as a JSON schema, what inputs this tool expects and in which form</li> <li>A function that actually executes the tool with the input the model sends to us and returns the result</li></ul> <p>So let’s add that to our code:</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token keyword">type</span> ToolDefinition <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+	Name        <span class="token builtin">string</span>                         <span class="token string">`json:"name"`</span>
+	Description <span class="token builtin">string</span>                         <span class="token string">`json:"description"`</span>
+	InputSchema anthropic<span class="token punctuation">.</span>ToolInputSchemaParam <span class="token string">`json:"input_schema"`</span>
+	Function    <span class="token keyword">func</span><span class="token punctuation">(</span>input json<span class="token punctuation">.</span>RawMessage<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span></code></pre> <p>Now we give our <code>Agent</code> tool definitions:</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token comment">// `tools` is added here:</span>
+<span class="token keyword">type</span> Agent <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+	client         <span class="token operator">*</span>anthropic<span class="token punctuation">.</span>Client
+	getUserMessage <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">bool</span><span class="token punctuation">)</span>
+	tools          <span class="token punctuation">[</span><span class="token punctuation">]</span>ToolDefinition
+<span class="token punctuation">}</span>
+
+<span class="token comment">// And here:</span>
+<span class="token keyword">func</span> <span class="token function">NewAgent</span><span class="token punctuation">(</span>
+	client <span class="token operator">*</span>anthropic<span class="token punctuation">.</span>Client<span class="token punctuation">,</span>
+	getUserMessage <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">bool</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+	tools <span class="token punctuation">[</span><span class="token punctuation">]</span>ToolDefinition<span class="token punctuation">,</span>
+<span class="token punctuation">)</span> <span class="token operator">*</span>Agent <span class="token punctuation">{</span>
+	<span class="token keyword">return</span> <span class="token operator">&amp;</span>Agent<span class="token punctuation">{</span>
+		client<span class="token punctuation">:</span>         client<span class="token punctuation">,</span>
+		getUserMessage<span class="token punctuation">:</span> getUserMessage<span class="token punctuation">,</span>
+		tools<span class="token punctuation">:</span>          tools<span class="token punctuation">,</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// And here:</span>
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// [... previous code ...]</span>
+	tools <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>ToolDefinition<span class="token punctuation">{</span><span class="token punctuation">}</span>
+	agent <span class="token operator">:=</span> <span class="token function">NewAgent</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>client<span class="token punctuation">,</span> getUserMessage<span class="token punctuation">,</span> tools<span class="token punctuation">)</span>
+
+    <span class="token comment">// [... previous code ...]</span>
+<span class="token punctuation">}</span></code></pre> <p>And send them along to the model in <code>runInference</code>:</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>a <span class="token operator">*</span>Agent<span class="token punctuation">)</span> <span class="token function">runInference</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">,</span> conversation <span class="token punctuation">[</span><span class="token punctuation">]</span>anthropic<span class="token punctuation">.</span>MessageParam<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token operator">*</span>anthropic<span class="token punctuation">.</span>Message<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	anthropicTools <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>anthropic<span class="token punctuation">.</span>ToolUnionParam<span class="token punctuation">{</span><span class="token punctuation">}</span>
+	<span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> tool <span class="token operator">:=</span> <span class="token keyword">range</span> a<span class="token punctuation">.</span>tools <span class="token punctuation">{</span>
+		anthropicTools <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>anthropicTools<span class="token punctuation">,</span> anthropic<span class="token punctuation">.</span>ToolUnionParam<span class="token punctuation">{</span>
+			OfTool<span class="token punctuation">:</span> <span class="token operator">&amp;</span>anthropic<span class="token punctuation">.</span>ToolParam<span class="token punctuation">{</span>
+				Name<span class="token punctuation">:</span>        tool<span class="token punctuation">.</span>Name<span class="token punctuation">,</span>
+				Description<span class="token punctuation">:</span> anthropic<span class="token punctuation">.</span><span class="token function">String</span><span class="token punctuation">(</span>tool<span class="token punctuation">.</span>Description<span class="token punctuation">)</span><span class="token punctuation">,</span>
+				InputSchema<span class="token punctuation">:</span> tool<span class="token punctuation">.</span>InputSchema<span class="token punctuation">,</span>
+			<span class="token punctuation">}</span><span class="token punctuation">,</span>
+		<span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+
+	message<span class="token punctuation">,</span> err <span class="token operator">:=</span> a<span class="token punctuation">.</span>client<span class="token punctuation">.</span>Messages<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> anthropic<span class="token punctuation">.</span>MessageNewParams<span class="token punctuation">{</span>
+		Model<span class="token punctuation">:</span>     anthropic<span class="token punctuation">.</span>ModelClaude3_7SonnetLatest<span class="token punctuation">,</span>
+		MaxTokens<span class="token punctuation">:</span> <span class="token function">int64</span><span class="token punctuation">(</span><span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+		Messages<span class="token punctuation">:</span>  conversation<span class="token punctuation">,</span>
+		Tools<span class="token punctuation">:</span>     anthropicTools<span class="token punctuation">,</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token keyword">return</span> message<span class="token punctuation">,</span> err
+<span class="token punctuation">}</span></code></pre> <p>There’s a bunch of type shenanigans going on and I’m not too good in Go-with-generics yet so I’m not going to try to explain <code>anthropic.String</code> and <code>ToolUnionParam</code> to you. But, really, I swear, it’s very simple:</p> <p>We send along our tool definitions, on the server Anthropic then wraps these definitions in <a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview#tool-use-system-prompt" rel="nofollow">this system prompt</a> (which isn’t much), which it adds to our <code>conversation</code>, and the model then replies in a specific way if it wants to use that tool.</p> <p>Alright, so tool definitions are being sent along, but we haven’t defined a tool yet. Let’s do that and define <code>read_file</code>:</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token keyword">var</span> ReadFileDefinition <span class="token operator">=</span> ToolDefinition<span class="token punctuation">{</span>
+	Name<span class="token punctuation">:</span>        <span class="token string">"read_file"</span><span class="token punctuation">,</span>
+	Description<span class="token punctuation">:</span> <span class="token string">"Read the contents of a given relative file path. Use this when you want to see what's inside a file. Do not use this with directory names."</span><span class="token punctuation">,</span>
+	InputSchema<span class="token punctuation">:</span> ReadFileInputSchema<span class="token punctuation">,</span>
+	Function<span class="token punctuation">:</span>    ReadFile<span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">type</span> ReadFileInput <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+	Path <span class="token builtin">string</span> <span class="token string">`json:"path" jsonschema_description:"The relative path of a file in the working directory."`</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> ReadFileInputSchema <span class="token operator">=</span> GenerateSchema<span class="token punctuation">[</span>ReadFileInput<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">func</span> <span class="token function">ReadFile</span><span class="token punctuation">(</span>input json<span class="token punctuation">.</span>RawMessage<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	readFileInput <span class="token operator">:=</span> ReadFileInput<span class="token punctuation">{</span><span class="token punctuation">}</span>
+	err <span class="token operator">:=</span> json<span class="token punctuation">.</span><span class="token function">Unmarshal</span><span class="token punctuation">(</span>input<span class="token punctuation">,</span> <span class="token operator">&amp;</span>readFileInput<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		<span class="token function">panic</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+
+	content<span class="token punctuation">,</span> err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">ReadFile</span><span class="token punctuation">(</span>readFileInput<span class="token punctuation">.</span>Path<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">}</span>
+	<span class="token keyword">return</span> <span class="token function">string</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> GenerateSchema<span class="token punctuation">[</span>T any<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span> anthropic<span class="token punctuation">.</span>ToolInputSchemaParam <span class="token punctuation">{</span>
+	reflector <span class="token operator">:=</span> jsonschema<span class="token punctuation">.</span>Reflector<span class="token punctuation">{</span>
+		AllowAdditionalProperties<span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+		DoNotReference<span class="token punctuation">:</span>            <span class="token boolean">true</span><span class="token punctuation">,</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">var</span> v T
+
+	schema <span class="token operator">:=</span> reflector<span class="token punctuation">.</span><span class="token function">Reflect</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span>
+
+	<span class="token keyword">return</span> anthropic<span class="token punctuation">.</span>ToolInputSchemaParam<span class="token punctuation">{</span>
+		Properties<span class="token punctuation">:</span> schema<span class="token punctuation">.</span>Properties<span class="token punctuation">,</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre> <p>That’s not much, is it? It’s a single function, <code>ReadFile</code>, and two descriptions the model will see: our <code>Description</code> that describes the tool itself (<code>"Read the contents of a given relative file path. ..."</code>) and a description of the single input parameter this tool has (<code>"The relative path of a ..."</code>).</p> <p>The <code>ReadFileInputSchema</code> and <code>GenerateSchema</code> stuff? We need that so that we can generate a JSON schema for our tool definition which we send to the model. To do that, we use the <code>jsonschema</code> package, which we need to import and download:</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token keyword">package</span> main
+
+<span class="token keyword">import</span> <span class="token punctuation">(</span>
+	<span class="token string">"bufio"</span>
+	<span class="token string">"context"</span>
+    <span class="token comment">// Add this:</span>
+	<span class="token string">"encoding/json"</span>
+	<span class="token string">"fmt"</span>
+	<span class="token string">"os"</span>
+
+	<span class="token string">"github.com/anthropics/anthropic-sdk-go"</span>
+    <span class="token comment">// Add this:</span>
+	<span class="token string">"github.com/invopop/jsonschema"</span>
+<span class="token punctuation">)</span></code></pre> <p>Then run the following:</p> <pre class="language-text"><code class="language-text">go mod tidy</code></pre> <p>Then, in the <code>main</code> function, we need to make sure that we use the definition:</p> <pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// [... previous code ...]</span>
+	tools <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>ToolDefinition<span class="token punctuation">{</span>ReadFileDefinition<span class="token punctuation">}</span>
+    <span class="token comment">// [... previous code ...]</span>
+<span class="token punctuation">}</span></code></pre> <p>Time to try it!</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: what's in main.go?</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I'll help you check what's in the main.go file. Let me read it for you.</span></div><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: </span></div><!--]--></div><!----> <p>Wait, what? Ho, ho, ho, it wants to use the tool! Obviously the output will be slightly different for you, but it certainly sounds like Claude knows that it can read files, right?</p> <p>The problem is that we don’t listen! When Claude winks, we ignore it. We need to fix that.</p> <p>Here, let me show you how to do that in a single, quick, surprisingly-agile-for-my-age move by replacing our <code>Agent</code>’s <code>Run</code> method with this:</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>a <span class="token operator">*</span>Agent<span class="token punctuation">)</span> <span class="token function">Run</span><span class="token punctuation">(</span>ctx context<span class="token punctuation">.</span>Context<span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">{</span>
+	conversation <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>anthropic<span class="token punctuation">.</span>MessageParam<span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"Chat with Claude (use 'ctrl-c' to quit)"</span><span class="token punctuation">)</span>
+
+	readUserInput <span class="token operator">:=</span> <span class="token boolean">true</span>
+	<span class="token keyword">for</span> <span class="token punctuation">{</span>
+		<span class="token keyword">if</span> readUserInput <span class="token punctuation">{</span>
+			fmt<span class="token punctuation">.</span><span class="token function">Print</span><span class="token punctuation">(</span><span class="token string">"\\u001b[94mYou\\u001b[0m: "</span><span class="token punctuation">)</span>
+			userInput<span class="token punctuation">,</span> ok <span class="token operator">:=</span> a<span class="token punctuation">.</span><span class="token function">getUserMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+			<span class="token keyword">if</span> <span class="token operator">!</span>ok <span class="token punctuation">{</span>
+				<span class="token keyword">break</span>
+			<span class="token punctuation">}</span>
+
+			userMessage <span class="token operator">:=</span> anthropic<span class="token punctuation">.</span><span class="token function">NewUserMessage</span><span class="token punctuation">(</span>anthropic<span class="token punctuation">.</span><span class="token function">NewTextBlock</span><span class="token punctuation">(</span>userInput<span class="token punctuation">)</span><span class="token punctuation">)</span>
+			conversation <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>conversation<span class="token punctuation">,</span> userMessage<span class="token punctuation">)</span>
+		<span class="token punctuation">}</span>
+
+		message<span class="token punctuation">,</span> err <span class="token operator">:=</span> a<span class="token punctuation">.</span><span class="token function">runInference</span><span class="token punctuation">(</span>ctx<span class="token punctuation">,</span> conversation<span class="token punctuation">)</span>
+		<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+			<span class="token keyword">return</span> err
+		<span class="token punctuation">}</span>
+		conversation <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>conversation<span class="token punctuation">,</span> message<span class="token punctuation">.</span><span class="token function">ToParam</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+		toolResults <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>anthropic<span class="token punctuation">.</span>ContentBlockParamUnion<span class="token punctuation">{</span><span class="token punctuation">}</span>
+		<span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> content <span class="token operator">:=</span> <span class="token keyword">range</span> message<span class="token punctuation">.</span>Content <span class="token punctuation">{</span>
+			<span class="token keyword">switch</span> content<span class="token punctuation">.</span>Type <span class="token punctuation">{</span>
+			<span class="token keyword">case</span> <span class="token string">"text"</span><span class="token punctuation">:</span>
+				fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"\\u001b[93mClaude\\u001b[0m: %s\n"</span><span class="token punctuation">,</span> content<span class="token punctuation">.</span>Text<span class="token punctuation">)</span>
+			<span class="token keyword">case</span> <span class="token string">"tool_use"</span><span class="token punctuation">:</span>
+				result <span class="token operator">:=</span> a<span class="token punctuation">.</span><span class="token function">executeTool</span><span class="token punctuation">(</span>content<span class="token punctuation">.</span>ID<span class="token punctuation">,</span> content<span class="token punctuation">.</span>Name<span class="token punctuation">,</span> content<span class="token punctuation">.</span>Input<span class="token punctuation">)</span>
+				toolResults <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>toolResults<span class="token punctuation">,</span> result<span class="token punctuation">)</span>
+			<span class="token punctuation">}</span>
+		<span class="token punctuation">}</span>
+		<span class="token keyword">if</span> <span class="token function">len</span><span class="token punctuation">(</span>toolResults<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+			readUserInput <span class="token operator">=</span> <span class="token boolean">true</span>
+			<span class="token keyword">continue</span>
+		<span class="token punctuation">}</span>
+		readUserInput <span class="token operator">=</span> <span class="token boolean">false</span>
+		conversation <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>conversation<span class="token punctuation">,</span> anthropic<span class="token punctuation">.</span><span class="token function">NewUserMessage</span><span class="token punctuation">(</span>toolResults<span class="token operator">...</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+
+	<span class="token keyword">return</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token punctuation">(</span>a <span class="token operator">*</span>Agent<span class="token punctuation">)</span> <span class="token function">executeTool</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> name <span class="token builtin">string</span><span class="token punctuation">,</span> input json<span class="token punctuation">.</span>RawMessage<span class="token punctuation">)</span> anthropic<span class="token punctuation">.</span>ContentBlockParamUnion <span class="token punctuation">{</span>
+	<span class="token keyword">var</span> toolDef ToolDefinition
+	<span class="token keyword">var</span> found <span class="token builtin">bool</span>
+	<span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> tool <span class="token operator">:=</span> <span class="token keyword">range</span> a<span class="token punctuation">.</span>tools <span class="token punctuation">{</span>
+		<span class="token keyword">if</span> tool<span class="token punctuation">.</span>Name <span class="token operator">==</span> name <span class="token punctuation">{</span>
+			toolDef <span class="token operator">=</span> tool
+			found <span class="token operator">=</span> <span class="token boolean">true</span>
+			<span class="token keyword">break</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">if</span> <span class="token operator">!</span>found <span class="token punctuation">{</span>
+		<span class="token keyword">return</span> anthropic<span class="token punctuation">.</span><span class="token function">NewToolResultBlock</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> <span class="token string">"tool not found"</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"\\u001b[92mtool\\u001b[0m: %s(%s)\n"</span><span class="token punctuation">,</span> name<span class="token punctuation">,</span> input<span class="token punctuation">)</span>
+	response<span class="token punctuation">,</span> err <span class="token operator">:=</span> toolDef<span class="token punctuation">.</span><span class="token function">Function</span><span class="token punctuation">(</span>input<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		<span class="token keyword">return</span> anthropic<span class="token punctuation">.</span><span class="token function">NewToolResultBlock</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> err<span class="token punctuation">.</span><span class="token function">Error</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">return</span> anthropic<span class="token punctuation">.</span><span class="token function">NewToolResultBlock</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> response<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span></code></pre> <p>Squint and you’ll see that it’s 90% boilerplate and 10% that matter: when we get a <code>message</code> back from Claude, we check wether Claude asked us to execute a tool by looking for <code>content.Type == "tool_use"</code>, if so we hand over to <code>executeTool</code>, lookup the tool by name in our local registry, unmarshal the input, execute it, return the result. If it’s an error, we flip a boolean. That’s it.</p> <p>(Yes, there is a loop in a loop, but it doesn’t matter.)</p> <p>We execute the tool, send the result back up to Claude, and ask again for Claude’s response. Truly: that’s <em>it</em>. Let me show you.</p> <p>Mise-en-place, run this:</p> <pre class="language-shell"><code class="language-shell"><span class="token builtin class-name">echo</span> <span class="token string">'what animal is the most disagreeable because it always says neigh?'</span> <span class="token operator">>></span> secret-file.txt</code></pre> <p>That creates a <code>secret-file.txt</code> in our directory, containing a mysterious riddle.</p> <p>In that very same directory, let’s run our new tool-using agent, and ask it to look at the file:</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: Claude, buddy, help me solve the riddle in the secret-file.txt file</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I'll help you solve the riddle in the secret-file.txt file. Let me first read the contents of this file to see what the riddle is.</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: read_file({"path":"secret-file.txt"})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: Great! I've found the riddle.
+
+The answer to the riddle is: **A horse**
+
+The riddle is playing on wordplay where "neigh" (the sound a horse makes) sounds like "nay" (a way to say "no" or disagree with something). So horses are described as disagreeable because they always say "neigh/nay" - implying they're always disagreeing.</span></div><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: </span></div><!--]--></div><!----> <p>Let’s take a deep breath and say it together. Ready? Here we go: <em>holy shit</em>. You just give it a tool and it… <em>uses it when it thinks it’ll help solve the task</em>. Remember: we didn’t say <em>anything</em> about “if a user asks you about a file, read the file”. We also didn’t say “if something looks like a filename, figure out how to read it”. No, none of that. We say “help me solve the thing in this file” and Claude realizes that it can read the file to answer that and off it goes.</p> <p>Of course, we <em>can</em> be specific and really nudge it towards a tool, but it basically does it all on its own:</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: What's going on in main.go? Be brief!</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I'll check the main.go file to see what's going on.</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: read_file({"path":"main.go"})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: Based on my review, main.go implements a Claude AI assistant agent that can use tools. Here's a brief summary:
+
+- It creates a command-line chat interface with Claude using the Anthropic Go SDK
+- Implements a tool system with a single "read_file" tool for reading file contents
+- Manages the conversation flow with Claude, handling both regular text responses and tool use requests
+- When Claude requests to use a tool, the agent executes it and returns the results
+- The program loops continuously to maintain a conversation until the user exits
+
+The code essentially builds a simple CLI-based chatbot that can interact with the file system when requested by Claude.</span></div><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: </span></div><!--]--></div><!----> <p>Spot on. Okay, now that we know how to make Claude use tools, let’s add a few more.</p> <h2>The <code>list_files</code> tool</h2> <p>If you’re anything like me, the first thing you do when you log into a new computer is to get your bearings by running <code>ls</code> — list files.</p> <p>Let’s give Claude the same ability, a tool to list files. And here’s the complete implementation of a <code>list_files</code> tool:</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token keyword">var</span> ListFilesDefinition <span class="token operator">=</span> ToolDefinition<span class="token punctuation">{</span>
+	Name<span class="token punctuation">:</span>        <span class="token string">"list_files"</span><span class="token punctuation">,</span>
+	Description<span class="token punctuation">:</span> <span class="token string">"List files and directories at a given path. If no path is provided, lists files in the current directory."</span><span class="token punctuation">,</span>
+	InputSchema<span class="token punctuation">:</span> ListFilesInputSchema<span class="token punctuation">,</span>
+	Function<span class="token punctuation">:</span>    ListFiles<span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">type</span> ListFilesInput <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+	Path <span class="token builtin">string</span> <span class="token string">`json:"path,omitempty" jsonschema_description:"Optional relative path to list files from. Defaults to current directory if not provided."`</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> ListFilesInputSchema <span class="token operator">=</span> GenerateSchema<span class="token punctuation">[</span>ListFilesInput<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">func</span> <span class="token function">ListFiles</span><span class="token punctuation">(</span>input json<span class="token punctuation">.</span>RawMessage<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	listFilesInput <span class="token operator">:=</span> ListFilesInput<span class="token punctuation">{</span><span class="token punctuation">}</span>
+	err <span class="token operator">:=</span> json<span class="token punctuation">.</span><span class="token function">Unmarshal</span><span class="token punctuation">(</span>input<span class="token punctuation">,</span> <span class="token operator">&amp;</span>listFilesInput<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		<span class="token function">panic</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+
+	dir <span class="token operator">:=</span> <span class="token string">"."</span>
+	<span class="token keyword">if</span> listFilesInput<span class="token punctuation">.</span>Path <span class="token operator">!=</span> <span class="token string">""</span> <span class="token punctuation">{</span>
+		dir <span class="token operator">=</span> listFilesInput<span class="token punctuation">.</span>Path
+	<span class="token punctuation">}</span>
+
+	<span class="token keyword">var</span> files <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">string</span>
+	err <span class="token operator">=</span> filepath<span class="token punctuation">.</span><span class="token function">Walk</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span>path <span class="token builtin">string</span><span class="token punctuation">,</span> info os<span class="token punctuation">.</span>FileInfo<span class="token punctuation">,</span> err <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">{</span>
+		<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+			<span class="token keyword">return</span> err
+		<span class="token punctuation">}</span>
+
+		relPath<span class="token punctuation">,</span> err <span class="token operator">:=</span> filepath<span class="token punctuation">.</span><span class="token function">Rel</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> path<span class="token punctuation">)</span>
+		<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+			<span class="token keyword">return</span> err
+		<span class="token punctuation">}</span>
+
+		<span class="token keyword">if</span> relPath <span class="token operator">!=</span> <span class="token string">"."</span> <span class="token punctuation">{</span>
+			<span class="token keyword">if</span> info<span class="token punctuation">.</span><span class="token function">IsDir</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+				files <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>files<span class="token punctuation">,</span> relPath<span class="token operator">+</span><span class="token string">"/"</span><span class="token punctuation">)</span>
+			<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+				files <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>files<span class="token punctuation">,</span> relPath<span class="token punctuation">)</span>
+			<span class="token punctuation">}</span>
+		<span class="token punctuation">}</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span>
+	<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">}</span>
+
+	result<span class="token punctuation">,</span> err <span class="token operator">:=</span> json<span class="token punctuation">.</span><span class="token function">Marshal</span><span class="token punctuation">(</span>files<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">}</span>
+
+	<span class="token keyword">return</span> <span class="token function">string</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span></code></pre> <p>Nothing fancy here: <code>list_files</code> returns the list of files and directories in the current folder. There’s a thousand optimizations we could (and probably should) make if this were a serious effort, but since I just want to show you what’s in the wizard’s hat, this is fine.</p> <p>One thing to note: we return a list of strings and we denote directories with a trailing slash. That’s not required, it’s just something I just decided to do. There’s no fixed format. Anything goes as long as Claude can make sense of it and whether it can you need to figure out by experimentation. You could also prepend each directory with <code>"directory: "</code> or return a Markdown document with two headers: <code>"directories"</code> and <code>"files"</code>. There’s a ton of options and which one you chose depends on what Claude can make the most sense of, how many tokens it requires, how fast it is to generate and read, and so on.</p> <p>Here, we just want to create a small <code>list_files</code> tool and the easiest option wins.</p> <p>Of course we need to tell Claude about <code>list_files</code> too:</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token comment">// [... previous code ...]</span>
+
+	tools <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>ToolDefinition<span class="token punctuation">{</span>ReadFileDefinition<span class="token punctuation">,</span> ListFilesDefinition<span class="token punctuation">}</span>
+
+	<span class="token comment">// [... previous code ...]</span>
+<span class="token punctuation">}</span></code></pre> <p>And that’s it. Let’s ask Claude what it can see in this directory.</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: what do you see in this directory?</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I'll help you see what's in the current directory. Let me list the files and directories for you.</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: list_files({})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I can see several files and directories in the current directory:
+
+1. Git-related files and directories:
+   - `.git/` directory with various Git configuration and tracking files
+   - `.gitignore` file
+
+2. Go project files:
+   - `main.go` - the main Go source code file
+   - `go.mod` - Go module definition file
+   - `go.sum` - Go module checksum file
+
+3. Documentation:
+   - `blogpost.md` - a markdown file, likely containing blog content
+
+4. Environment configuration:
+   - `.envrc` - likely an environment configuration file
+
+Would you like me to examine the contents of any specific file from this list?</span></div><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: </span></div><!--]--></div><!----> <p>Works! It can read the directory.</p> <p>But here’s the thing: Claude knows how to combine these tools. We just need to prompt it in a way that provokes it:</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: Tell me about all the Go files in here. Be brief!</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I'll examine the Go files in the current directory for you. Let me check what files are available first.</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: list_files({})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I found a Go file in the current directory. Let me examine it:</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: read_file({"path":"main.go"})</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: read_file({"path":"go.mod"})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: Here's a brief overview of the Go files in this project:
+
+**main.go**:
+- Implements a Claude AI agent that can interact with the local filesystem
+- Uses the Anthropic SDK for Go to communicate with Claude AI models
+- Provides two tools: `read_file` and `list_files` that allow Claude to read file contents and list directory contents
+- Manages a conversation flow between the user and Claude, handling tool execution when Claude needs to access files
+
+**go.mod**:
+- Defines the module dependencies
+- Main dependencies are the Anthropic SDK for Go and a JSON schema library
+- Uses Go 1.24.1
+
+This appears to be a simple terminal-based application that allows users to chat with Claude while giving the AI access to read local files and list directories.</span></div><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: </span></div><!--]--></div><!----> <p>First it used the <code>list_files</code> and then it called <code>read_file</code> twice with the Go-related files that I asked it about.</p> <p>Just… just like we would, right? I mean, here, what would you do if I ask you what version of Go we use in this project? Here’s what Claude does for me:</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: What go version are we using in this project?</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I'll help you find the Go version being used in this project. Let me check the files to locate where the Go version might be specified.</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: list_files({})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I can see there's a Go project here with several important files like `go.mod`, `go.sum`, and `main.go`. Let me check the `go.mod` file first, as it typically contains the Go version information.</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: read_file({"path":"go.mod"})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: According to the `go.mod` file, this project is using Go version 1.24.1.</span></div><!--]--></div><!----> <p>Claude looks at the directory, looks at <code>go.mod</code>, and has the answer.</p> <p>We’re at around 190 lines of code now. Let that sink in. Once you have, let’s add another tool.</p> <h2>Let it <code>edit_file</code></h2> <p>The last tool we’re going to add is <code>edit_file</code> — a tool that lets Claude edit files.</p> <p>“Holy shit”, you’re thinking now, “this is where the rubber hits the road, this is where he pulls the rabbit out of the hat.” Well, let’s see, shall we?</p> <p>First, let’s add a definition for our new <code>edit_file</code> tool:</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token keyword">var</span> EditFileDefinition <span class="token operator">=</span> ToolDefinition<span class="token punctuation">{</span>
+	Name<span class="token punctuation">:</span> <span class="token string">"edit_file"</span><span class="token punctuation">,</span>
+	Description<span class="token punctuation">:</span> <span class="token string">`Make edits to a text file.
+
+Replaces 'old_str' with 'new_str' in the given file. 'old_str' and 'new_str' MUST be different from each other.
+
+If the file specified with path doesn't exist, it will be created.
+`</span><span class="token punctuation">,</span>
+	InputSchema<span class="token punctuation">:</span> EditFileInputSchema<span class="token punctuation">,</span>
+	Function<span class="token punctuation">:</span>    EditFile<span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">type</span> EditFileInput <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+	Path   <span class="token builtin">string</span> <span class="token string">`json:"path" jsonschema_description:"The path to the file"`</span>
+	OldStr <span class="token builtin">string</span> <span class="token string">`json:"old_str" jsonschema_description:"Text to search for - must match exactly and must only have one match exactly"`</span>
+	NewStr <span class="token builtin">string</span> <span class="token string">`json:"new_str" jsonschema_description:"Text to replace old_str with"`</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> EditFileInputSchema <span class="token operator">=</span> GenerateSchema<span class="token punctuation">[</span>EditFileInput<span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre> <p>That’s right, I again know what you’re thinking: “string replacement to edit
+files?” Claude 3.7 loves replacing strings (experimentation is how you find out
+what they love or don’t), so we’re going to implement <code>edit_file</code> by telling
+Claude it can edit files by replacing existing text with new text.</p> <p>Now here’s the implementation of the <code>EditFile</code> function in Go:</p> <pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">EditFile</span><span class="token punctuation">(</span>input json<span class="token punctuation">.</span>RawMessage<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	editFileInput <span class="token operator">:=</span> EditFileInput<span class="token punctuation">{</span><span class="token punctuation">}</span>
+	err <span class="token operator">:=</span> json<span class="token punctuation">.</span><span class="token function">Unmarshal</span><span class="token punctuation">(</span>input<span class="token punctuation">,</span> <span class="token operator">&amp;</span>editFileInput<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">}</span>
+
+	<span class="token keyword">if</span> editFileInput<span class="token punctuation">.</span>Path <span class="token operator">==</span> <span class="token string">""</span> <span class="token operator">||</span> editFileInput<span class="token punctuation">.</span>OldStr <span class="token operator">==</span> editFileInput<span class="token punctuation">.</span>NewStr <span class="token punctuation">{</span>
+		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"invalid input parameters"</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+
+	content<span class="token punctuation">,</span> err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">ReadFile</span><span class="token punctuation">(</span>editFileInput<span class="token punctuation">.</span>Path<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		<span class="token keyword">if</span> os<span class="token punctuation">.</span><span class="token function">IsNotExist</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> editFileInput<span class="token punctuation">.</span>OldStr <span class="token operator">==</span> <span class="token string">""</span> <span class="token punctuation">{</span>
+			<span class="token keyword">return</span> <span class="token function">createNewFile</span><span class="token punctuation">(</span>editFileInput<span class="token punctuation">.</span>Path<span class="token punctuation">,</span> editFileInput<span class="token punctuation">.</span>NewStr<span class="token punctuation">)</span>
+		<span class="token punctuation">}</span>
+		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">}</span>
+
+	oldContent <span class="token operator">:=</span> <span class="token function">string</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span>
+	newContent <span class="token operator">:=</span> strings<span class="token punctuation">.</span><span class="token function">Replace</span><span class="token punctuation">(</span>oldContent<span class="token punctuation">,</span> editFileInput<span class="token punctuation">.</span>OldStr<span class="token punctuation">,</span> editFileInput<span class="token punctuation">.</span>NewStr<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+	<span class="token keyword">if</span> oldContent <span class="token operator">==</span> newContent <span class="token operator">&amp;&amp;</span> editFileInput<span class="token punctuation">.</span>OldStr <span class="token operator">!=</span> <span class="token string">""</span> <span class="token punctuation">{</span>
+		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"old_str not found in file"</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+
+	err <span class="token operator">=</span> os<span class="token punctuation">.</span><span class="token function">WriteFile</span><span class="token punctuation">(</span>editFileInput<span class="token punctuation">.</span>Path<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>newContent<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0644</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">}</span>
+
+	<span class="token keyword">return</span> <span class="token string">"OK"</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span></code></pre> <p>It checks the input parameters, it reads the file (or creates it if it exists), and replaces the <code>OldStr</code> with <code>NewStr</code>. Then it writes the content back to disk and returns <code>"OK"</code>.</p> <p>What’s missing still is <code>createNewFile</code>, which is just a tiny helper function that would be 70% shorter if this wasn’t Go:</p> <pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">createNewFile</span><span class="token punctuation">(</span>filePath<span class="token punctuation">,</span> content <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	dir <span class="token operator">:=</span> path<span class="token punctuation">.</span><span class="token function">Dir</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> dir <span class="token operator">!=</span> <span class="token string">"."</span> <span class="token punctuation">{</span>
+		err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">MkdirAll</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> <span class="token number">0755</span><span class="token punctuation">)</span>
+		<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+			<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"failed to create directory: %w"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">}</span>
+
+	err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">WriteFile</span><span class="token punctuation">(</span>filePath<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0644</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"failed to create file: %w"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+
+	<span class="token keyword">return</span> fmt<span class="token punctuation">.</span><span class="token function">Sprintf</span><span class="token punctuation">(</span><span class="token string">"Successfully created file %s"</span><span class="token punctuation">,</span> filePath<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span></code></pre> <p>Last step: adding it to the list of tools that we send to Claude.</p> <pre class="language-go"><code class="language-go"><span class="token comment">// main.go</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token comment">// [... previous code ...]</span>
+
+	tools <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>ToolDefinition<span class="token punctuation">{</span>ReadFileDefinition<span class="token punctuation">,</span> ListFilesDefinition<span class="token punctuation">,</span> EditFileDefinition<span class="token punctuation">}</span>
+
+	<span class="token comment">// [... previous code ...]</span>
+<span class="token punctuation">}</span></code></pre> <p>And… we’re ready, but are <em>you</em>? Are you ready to let it rip?</p> <p>Thought so, let’s do this. Let’s tell Claude to create a new FizzBuzz function in JavaScript.</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: hey claude, create fizzbuzz.js that I can run with Nodejs and that has fizzbuzz in it and executes it</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I'll create a fizzbuzz.js file that you can run with Node.js. First, let me check if the file already exists:</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: list_files({})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I don't see a fizzbuzz.js file, so I'll create one with a classic FizzBuzz implementation. This program will print numbers from 1 to 100, but for multiples of 3 it will print "Fizz", for multiples of 5 it will print "Buzz", and for numbers that are multiples of both 3 and 5 it will print "FizzBuzz".</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: edit_file({"path":"fizzbuzz.js","old_str":"","new_str":"/**\n * FizzBuzz implementation in JavaScript\n * Prints numbers from 1 to 100, but:\n * - For multiples of 3, print \"Fizz\" instead of the number\n * - For multiples of 5, print \"Buzz\" instead of the number\n * - For multiples of both 3 and 5, print \"FizzBuzz\"\n */\n\nfunction fizzBuzz(n) {\n    for (let i = 1; i &lt;= n; i++) {\n        let output = '';\n        \n        if (i % 3 === 0) output += 'Fizz';\n        if (i % 5 === 0) output += 'Buzz';\n        \n        console.log(output || i);\n    }\n}\n\n// Execute FizzBuzz for numbers 1 to 100\nconsole.log('Running FizzBuzz:');\nfizzBuzz(100);"}</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I've created a fizzbuzz.js file that you can run with Node.js. The program:
+
+1. Defines a function called `fizzBuzz` that takes a parameter `n` for the upper limit
+2. Loops from 1 to n (set to 100 in the execution)
+3. For each number:
+   - If it's divisible by 3, it adds "Fizz" to the output
+   - If it's divisible by 5, it adds "Buzz" to the output
+   - If it's divisible by both, it adds both resulting in "FizzBuzz"
+   - If it's not divisible by either 3 or 5, it outputs the number itself
+4. The script automatically executes the function for numbers 1 to 100
+
+You can run this script using Node.js with the following command in your terminal:
+
+node fizzbuzz.js
+
+This will output the FizzBuzz sequence from 1 to 100 to your console.</span></div><!--]--></div><!----> <p>Right?! It’s impressive, isn’t it? And that’s the <em>most basic implemenation</em> of <code>edit_file</code> — of an agent in general — you can probably come up with.</p> <p>But, did it work? Yes, it did:</p> <pre class="language-text"><code class="language-text">$ node fizzbuzz.js
+Running FizzBuzz:
+1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+FizzBuzz
+16
+[...]</code></pre> <p>Amazing. But hey, let’s have it actually <em>edit</em> a file and not just create one.</p> <p>Here’s what Claude does when I ask it to “Please edit the <code>fizzbuzz.js</code> so that it only prints until 15”:</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: Please edit fizzbuzz.js so that it only prints until 15</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I'll edit the fizzbuzz.js file to print only until 15 instead of its current limit. First, let me check the current content of the file to understand what changes are needed.</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: read_file({"path":"fizzbuzz.js"})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I can see that the file currently runs FizzBuzz up to 100. I'll modify it to only run up to 15 instead by changing the parameter in the fizzBuzz function call.</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: edit_file({"path":"fizzbuzz.js","old_str":"// Execute FizzBuzz for numbers 1 to 100\nconsole.log('Running FizzBuzz:');\nfizzBuzz(100);","new_str":"// Execute FizzBuzz for numbers 1 to 15\nconsole.log('Running FizzBuzz:');\nfizzBuzz(15);"})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I also need to update the comment at the top of the file to reflect this change:</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: edit_file({"path":"fizzbuzz.js","old_str":"/**\n * FizzBuzz implementation in JavaScript\n * Prints numbers from 1 to 100, but:","new_str":"/**\n * FizzBuzz implementation in JavaScript\n * Prints numbers from 1 to 15, but:"})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: The changes have been successfully made to the fizzbuzz.js file. The program will now:
+1. Only print FizzBuzz from 1 to 15 (instead of 1 to 100)
+2. The documentation has been updated to reflect this change
+
+The function itself remains the same, as it takes a parameter to determine the upper limit, and we've simply changed that parameter from 100 to 15.</span></div><!--]--></div><!----> <p>It reads the file, it edits the file to change the how long it runs, <em>and</em> then it also edits the file to update the comment at the top.</p> <p>And it still works:</p> <pre class="language-text"><code class="language-text">$ node fizzbuzz.js
+Running FizzBuzz:
+1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+FizzBuzz</code></pre> <p>Okay, let’s do one more and ask it to do the following:</p> <blockquote><p>Create a congrats.js script that rot13-decodes the following string ‘Pbatenghyngvbaf ba ohvyqvat n pbqr-rqvgvat ntrag!’ and prints it</p></blockquote> <p>Maybe a tall order. Let’s see:</p> <div class="terminal-chat font-mono p-4 rounded-md whitespace-pre-wrap overflow-x-auto text-base space-y-2"><!--[--><div class="m-0 text-muted-foreground">$ go run main.go</div> <div class="m-0 text-foreground">Chat with Claude (use 'ctrl-c' to quit)</div><!--]--> <!--[--><div><span class="text-blue-600 dark:text-blue-400">You</span><span class="text-foreground">: Create a congrats.js script that rot13-decodes the following string 'Pbatenghyngvbaf ba ohvyqvat n pbqr-rqvgvat ntrag!' and prints it</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I'll create a congrats.js script that decodes the ROT13-encoded string and prints it. ROT13 is a simple letter substitution cipher that replaces a letter with the 13th letter after it in the alphabet.
+
+Let me create this file for you:</span></div><div><span class="text-green-600 dark:text-green-400">tool</span><span class="text-foreground">: edit_file({"path":"congrats.js","old_str":"","new_str":"/**\n * A script to decode a ROT13-encoded string and print the result\n */\n\nfunction rot13Decode(encodedStr) {\n  return encodedStr.replace(/[a-zA-Z]/g, function(char) {\n    // Get the character code\n    const charCode = char.charCodeAt(0);\n    \n    // Handle uppercase letters\n    if (charCode >= 65 &amp;&amp; charCode &lt;= 90) {\n      return String.fromCharCode(((charCode - 65 + 13) % 26) + 65);\n    }\n    \n    // Handle lowercase letters\n    if (charCode >= 97 &amp;&amp; charCode &lt;= 122) {\n      return String.fromCharCode(((charCode - 97 + 13) % 26) + 97);\n    }\n    \n    // Return non-alphabetic characters as is\n    return char;\n  });\n}\n\nconst encodedMessage = 'Pbatenghyngvbaf ba ohvyqvat n pbqr-rqvgvat ntrag!';\nconst decodedMessage = rot13Decode(encodedMessage);\n\nconsole.log(decodedMessage);"})</span></div><div><span class="text-yellow-600 dark:text-yellow-300">Claude</span><span class="text-foreground">: I've created a JavaScript file called congrats.js that:
+
+1. Defines a `rot13Decode` function that takes an encoded string and applies the ROT13 cipher to decode it
+2. Takes the provided string 'Pbatenghyngvbaf ba ohvyqvat n pbqr-rqvgvat ntrag!'
+3. Decodes it using the function
+4. Prints the decoded message to the console
+
+You can run this script using Node.js by typing `node congrats.js` in your terminal. The script will decode and display the hidden congratulatory message!</span></div><!--]--></div><!----> <p>Does it work? Let’s try it:</p> <pre class="language-text"><code class="language-text">$ node congrats.js
+Congratulations on building a code-editing agent!</code></pre> <p>It does!</p> <h2>Isn’t this amazing?</h2> <p>If you’re anything like all the engineers I’ve talked to in the past few months,
+chances are that, while reading this, you have been waiting for the rabbit to be
+pulled out of the hat, for me to say “well, in reality it’s much, much harder
+than this.” But it’s not.</p> <p>This is essentially all there is to the inner loop of a code-editing agent.
+Sure, integrating it into your editor, tweaking the system prompt, giving it the
+right feedback at the right time, a nice UI around it, better tooling around the
+tools, support for multiple agents, and so on — we’ve built all of that in <a href="/">Amp</a>,
+but it didn’t require moments of genius. All that was required was practical
+engineering and elbow grease.</p> <p>These models are incredibly powerful now. 300 lines of code and three tools and
+now you’re to be able to talk to an alien intelligence that edits your code. If
+you think “well, but we didn’t really…” — go and try it! Go and see how far
+you can get with this. I bet it’s a lot farther than you think.</p> <p><em>That</em>’s why we think everything’s changing.</p><!----><!--]--><!----><!----><!--]--></div></div> <!--[!--><!--]--></div></div><!----><!----></div> <!--[--><footer class="grid-container border-t border-border grid-section" data-page-footer=""><div class="cell-pad section-header gap-[var(--lens-cell-padding)] svelte-1yl60m7"><a class="inline-block" href="/"><!--[!--><svg class="h-full w-20 md:w-30" viewBox="0 0 281 144" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M236.014 20C260.431 20.0001 280.602 37.4115 280.603 64.7432C280.602 93.5337 260.065 114.166 233.52 114.166C224.158 114.166 215.639 112.422 208.63 108.49C202.886 105.27 198.203 100.605 194.919 94.3379L188.115 141.822L187.946 143.016H174.214L174.448 141.423L191.772 22.4941H205.372L203.937 31.3369C212.143 23.8608 223.2 20.0002 236.014 20ZM47.082 20.1543C56.4435 20.1543 65.0012 21.8991 72.0488 25.8486C77.8222 29.0831 82.5323 33.7713 85.8271 40.085L88.1201 23.6924L88.2861 22.4932H101.863L89.1611 110.633L88.9873 111.826H75.4092L76.7227 102.855C68.5854 110.456 57.3981 114.323 44.5889 114.323C20.1709 114.323 0.000167223 96.9087 0 69.5771C0.000149745 40.7854 20.54 20.1549 47.082 20.1543ZM116.234 110.636L116.061 111.827H102.485L115.351 23.6855L115.521 22.4941H129.083L116.234 110.636ZM140.673 110.636L140.499 111.827H126.924L139.789 23.6855L139.96 22.4941H153.521L140.673 110.636ZM177.958 22.4941L165.108 110.636L164.935 111.827H151.36L164.225 23.6855L164.396 22.4941H177.958ZM48.4854 31.9844C27.8638 31.985 14.0133 48.3799 14.0127 68.9521C14.0127 77.7907 16.8094 86.1771 22.3145 92.334C27.7973 98.4657 36.0631 102.493 47.2402 102.493C67.8534 102.493 81.7122 85.9487 81.7129 65.3682C81.7129 55.4076 78.2493 47.0792 72.4131 41.2441C66.5794 35.4088 58.2871 31.9844 48.4854 31.9844ZM233.362 31.8291C212.749 31.8297 198.89 48.3716 198.89 68.9521C198.89 78.9123 202.356 87.2403 208.189 93.0742C214.023 98.9107 222.315 102.336 232.116 102.336C252.738 102.335 266.589 85.9407 266.59 65.3682C266.59 56.5296 263.795 48.1424 258.29 41.9863C252.807 35.8551 244.542 31.8291 233.362 31.8291Z"></path></svg><!--]--><!----></a> <div class="footer-legal svelte-1yl60m7"><ul class="svelte-1yl60m7"><li class="svelte-1yl60m7"><a href="https://ampcodestatus.com" class="flex items-center gap-1.5 lg:gap-2"><span class="w-1.5 h-1.5 rounded-full operational order-2 md:order-1 svelte-17tm13q"></span> <span class="order-1 md:order-2">All Systems Operational</span></a><!----></li> <li class="svelte-1yl60m7"><a href="/security" class="svelte-1yl60m7">Security</a></li> <li class="svelte-1yl60m7"><a href="/privacy-policy" class="svelte-1yl60m7">Privacy Policy</a></li> <li class="svelte-1yl60m7"><a href="/terms" class="svelte-1yl60m7">Terms of Service</a></li></ul></div></div> <div class="cell-pad md:col-span-2 lg:col-start-3 lg:col-span-4 flex flex-col gap-8 lg:flex-row sm:grid sm:grid-cols-2 sm:gap-[var(--lens-cell-padding)] lg:flex lg:gap-0 lg:justify-between"><div class="footer-column svelte-1yl60m7"><h3 class="svelte-1yl60m7">Product</h3> <ul class="svelte-1yl60m7"><!--[!--><li class="svelte-1yl60m7"><a href="/auth/sign-up" class="svelte-1yl60m7">Get Started</a></li> <li class="svelte-1yl60m7"><a href="/auth/sign-in" class="svelte-1yl60m7">Sign In</a></li><!--]--> <li class="svelte-1yl60m7"><a href="/manual" class="svelte-1yl60m7">Owner's Manual</a></li> <li class="svelte-1yl60m7"><a href="/models" class="svelte-1yl60m7">Models</a></li></ul></div> <div class="footer-column svelte-1yl60m7"><h3 class="svelte-1yl60m7">Resources</h3> <ul class="svelte-1yl60m7"><li class="svelte-1yl60m7"><a href="/chronicle" class="svelte-1yl60m7">Chronicle</a></li> <li class="svelte-1yl60m7"><a href="/pricing" class="svelte-1yl60m7">Pricing</a></li> <li class="svelte-1yl60m7"><a href="/podcast" class="svelte-1yl60m7">Podcast</a></li> <li class="svelte-1yl60m7"><a href="/press-kit" class="svelte-1yl60m7">Press Kit</a></li></ul></div> <div class="footer-column svelte-1yl60m7"><h3 class="svelte-1yl60m7">Guides</h3> <ul class="svelte-1yl60m7"><li class="svelte-1yl60m7"><a href="/how-to-build-an-agent" class="svelte-1yl60m7">How to Build an Agent</a></li> <li class="svelte-1yl60m7"><a href="/guides/context-management" class="svelte-1yl60m7">Context Management</a></li></ul></div> <div class="footer-column svelte-1yl60m7"><h3 class="svelte-1yl60m7">Community</h3> <ul class="svelte-1yl60m7"><li class="svelte-1yl60m7"><a href="https://x.com/ampcode" class="svelte-1yl60m7">𝕏 @ampcode</a></li> <li class="svelte-1yl60m7"><a href="https://ampcode.com/insiders" class="svelte-1yl60m7">Amp Insiders</a></li> <li class="svelte-1yl60m7"><a href="https://www.youtube.com/@Sourcegraph/videos" class="svelte-1yl60m7">YouTube</a></li></ul></div></div></footer><!--]--></div> <!--[!--><!--]--><!----> <!--[--><!--[!--><!--]--> <!--[!--><!--]--><!--]--><!----><!--]--><!----><!--]--> <div class="sonner-container fixed bottom-4 left-4 z-100 flex flex-col gap-2 svelte-a8z4tr"><!--[--><!--]--></div><!----><!----><!----> <!--[!--><!--]--><!----> <!----><!----><!----><!--[!--><!--]--><!----><!----><!----><!----><!----><!----> <!--[!--><!--]--><!----><!----><!--]--> <!--[!--><!--]--><!--]-->
+			
+			<script>
+				{
+					__sveltekit_t7ann = {
+						base: "",
+						env: {"PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY":"BA0BielWB9tDSsedAEuBPujSJr580MjArIQjpyjy_AsPcWQDMBhUCbZMvEjVTs9xoUul8FnE4HFQl3hIW_z9tBM","PUBLIC_SLACK_APP_ID":"A09SJP9PVQU"}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("/_app/immutable/entry/start.BpjbSzS3.js"),
+						import("/_app/immutable/entry/app.BXST5gJ2.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 38, 183],
+							data: [{type:"data",data:{browserTraceparent:null,browserTracingGoogleCloudProject:null,browserTracingEnabled:false,user:void 0,userWorkspace:void 0,timezone:"UTC",forcedTraceId:void 0,keyboardShortcutPlatform:void 0,threadActorConfig:{baseURL:"https://default:pk_9tm4qz3zrMerdZXTlBRLRsmJIzSQIPH24meKBqiL6vVpscTvc4w1YPiBgymXf9Az@ampcode.com/actors",ampURL:"https://ampcode.com",poolName:"k8s"},previewGatewayURL:null,sudoSession:null,viewState:{sidebarDesktopOpen:true,sidebarWidth:256,devmanOpen:false,devmanPanelState:{tab:"threads",selectedThread:"current",expandedSections:["worker","agent","executor"]},notGenerallyAvailableRibbon:true,devmanWidth:520,threadPaneSizes:[60,40],rightSidebarOpen:false,rightSidebarPanel:"editor",threadMultiPaneState:{paneSizes:[60,40],secondaryPaneOpen:true,secondaryPaneID:"editor",mobilePaneID:"main",isMobile:false},changesDiffLayout:"split",changesFilesSidebarHidden:false,collapsedProjects:[],v2Only:false}},uses:{}},null,null],
+							form: null,
+							error: null
+						});
+					});
+
+					if ('serviceWorker' in navigator) {
+						addEventListener('load', function () {
+							navigator.serviceWorker.register('/service-worker.js');
+						});
+					}
+				}
+			</script>
+		</div>
+	</body>
+</html>
