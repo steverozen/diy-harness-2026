@@ -103,7 +103,8 @@ confirmation, and no diff shown first. Run it against a scratch directory or a
 repository whose state is committed, never against anything you cannot restore.
 
 There is also no retry logic, no token accounting, no streaming, no context
-compaction, and no test suite. Each of those absences is a reasonable exercise.
+compaction, and no test suite. Each of any of these would
+be a reasonable teaching exercise.
 
 ## Licence
 
