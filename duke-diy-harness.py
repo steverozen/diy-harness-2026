@@ -4,7 +4,7 @@ import inspect
 import json
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -19,9 +19,9 @@ duke_client = OpenAI(
     base_url=DUKE_BASE_URL,
 )
 #| eval: true
-YOU_COLOR = "[94m"
-ASSISTANT_COLOR = "[93m"
-RESET_COLOR = "[0m"
+YOU_COLOR = "\033[94m"
+ASSISTANT_COLOR = "\033[93m"
+RESET_COLOR = "\033[0m"
 
 
 def resolve_abs_path(path_str: str) -> Path:
@@ -36,7 +36,7 @@ def resolve_abs_path(path_str: str) -> Path:
 
 
 #| eval: true
-def read_file_tool(filename: str) -> Dict[str, Any]:
+def read_file_tool(filename: str) -> dict[str, Any]:
     """
     Gets the full content of a file provided by the user.
     :param filename: The name of the file to read.
@@ -50,7 +50,7 @@ def read_file_tool(filename: str) -> Dict[str, Any]:
 
 
 #| eval: true
-def list_files_tool(path: str) -> Dict[str, Any]:
+def list_files_tool(path: str) -> dict[str, Any]:
     """
     Lists the files in a directory provided by the user.
     :param path: The path to a directory to list files from.
@@ -66,7 +66,7 @@ def list_files_tool(path: str) -> Dict[str, Any]:
 
 
 #| eval: true
-def edit_file_tool(path: str, old_str: str, new_str: str) -> Dict[str, Any]:
+def edit_file_tool(path: str, old_str: str, new_str: str) -> dict[str, Any]:
     """
     Replaces first occurrence of old_str with new_str in file. If old_str is empty,
     create/overwrite file with new_str.
@@ -128,7 +128,7 @@ get_full_system_prompt()
 
 
 #| eval: true
-def extract_tool_invocations(text: str) -> List[Tuple[str, Dict[str, Any]]]:
+def extract_tool_invocations(text: str) -> list[tuple[str, dict[str, Any]]]:
     """
     Return list of (tool_name, args) requested in 'tool: name({...})' lines.
     The parser expects single-line, compact JSON in parentheses.
@@ -147,7 +147,8 @@ def extract_tool_invocations(text: str) -> List[Tuple[str, Dict[str, Any]]]:
             json_str = rest[:-1].strip()
             args = json.loads(json_str)
             invocations.append((name, args))
-        except Exception:
+        except ValueError:
+            # Malformed tool line (bad split or invalid JSON), skip it.
             continue
     return invocations
 
@@ -155,7 +156,7 @@ def extract_tool_invocations(text: str) -> List[Tuple[str, Dict[str, Any]]]:
 LLM_CALL_COUNTER = 0
 
 
-def execute_llm_call(conversation: List[Dict[str, str]]):
+def execute_llm_call(conversation: list[dict[str, str]]):
     """
     Send the full conversation (including the system message) to the Duke AI
     Proxy and return the assistant's reply as a plain string.

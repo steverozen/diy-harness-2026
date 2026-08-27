@@ -59,7 +59,7 @@ import os
 import anthropic
 from dotenv import load_dotenv
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 load_dotenv()
 
@@ -115,7 +115,7 @@ The simplest tool. Take a filename, return its contents:
 
 ```{python}
 #| eval: true
-def read_file_tool(filename: str) -> Dict[str, Any]:
+def read_file_tool(filename: str) -> dict[str, Any]:
     """
     Gets the full content of a file provided by the user.
     :param filename: The name of the file to read.
@@ -139,7 +139,7 @@ Navigate directories by listing their contents:
 
 ```{python}
 #| eval: true
-def list_files_tool(path: str) -> Dict[str, Any]:
+def list_files_tool(path: str) -> dict[str, Any]:
     """
     Lists the files in a directory provided by the user.
     :param path: The path to a directory to list files from.
@@ -167,7 +167,7 @@ This is the most complex tool, but still straightforward. It handles two cases:
 
 ```{python}
 #| eval: true
-def edit_file_tool(path: str, old_str: str, new_str: str) -> Dict[str, Any]:
+def edit_file_tool(path: str, old_str: str, new_str: str) -> dict[str, Any]:
     """
     Replaces first occurrence of old_str with new_str in file. If old_str is empty,
     create/overwrite file with new_str.
@@ -230,7 +230,7 @@ def get_tool_str_representation(tool_name: str) -> str:
     # Python expression that gets evaluated and interpolated.
     # - tool.__doc__ is the function's docstring (the """..."""  block right under "def").
     # - inspect.signature(tool) reflects on the function and returns its parameter
-    #   list, e.g. "(filename: str) -> Dict[str, Any]". The `inspect` module is in
+    #   list, e.g. "(filename: str) -> dict[str, Any]". The `inspect` module is in
     #   Python's standard library; it lets code examine other code at runtime.
     return f"""
     Name: {tool_name}
@@ -291,7 +291,7 @@ When the LLM responds, we need to detect if it’s asking us to run a tool:
 
 ```{python}
 #| eval: true
-def extract_tool_invocations(text: str) -> List[Tuple[str, Dict[str, Any]]]:
+def extract_tool_invocations(text: str) -> list[tuple[str, dict[str, Any]]]:
     """
     Return list of (tool_name, args) requested in 'tool: name({...})' lines.
     The parser expects single-line, compact JSON in parentheses.
@@ -310,7 +310,8 @@ def extract_tool_invocations(text: str) -> List[Tuple[str, Dict[str, Any]]]:
             json_str = rest[:-1].strip()
             args = json.loads(json_str)
             invocations.append((name, args))
-        except Exception:
+        except ValueError:
+            # Malformed tool line (bad split or invalid JSON), skip it.
             continue
     return invocations
 ```
@@ -327,11 +328,11 @@ A thin wrapper around the API:
 
 # Send the current conversation to Claude and return the model's reply as a string.
 #
-# Parameter type hint: List[Dict[str, str]] means "a list of dicts where each
+# Parameter type hint: list[dict[str, str]] means "a list of dicts where each
 # dict has string keys and string values". A typical element looks like:
 #     {"role": "user", "content": "Read hello.py"}
 # Roles in this codebase are "system", "user", or "assistant".
-def execute_llm_call(conversation: List[Dict[str, str]]):
+def execute_llm_call(conversation: list[dict[str, str]]):
     # The Anthropic API treats the system prompt as a *separate* top-level
     # parameter, not as another message in the messages list (this differs
     # from OpenAI's chat-completions API, where system is just role="system").

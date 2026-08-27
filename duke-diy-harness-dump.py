@@ -6,7 +6,7 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 load_dotenv()
 
@@ -24,11 +24,11 @@ duke_client = OpenAI(
 # smallest change that lets a tool see state owned by the loop, an
 # alternative would be to thread `conversation` through every tool call as
 # an extra argument, but that's a lot more plumbing for a workshop demo.
-CONVERSATION: List[Dict[str, str]] = []
+CONVERSATION: list[dict[str, str]] = []
 #| eval: true
-YOU_COLOR = "[94m"
-ASSISTANT_COLOR = "[93m"
-RESET_COLOR = "[0m"
+YOU_COLOR = "\033[94m"
+ASSISTANT_COLOR = "\033[93m"
+RESET_COLOR = "\033[0m"
 #| eval: true
 def resolve_abs_path(path_str: str) -> Path:
     """
@@ -39,7 +39,7 @@ def resolve_abs_path(path_str: str) -> Path:
         path = (Path.cwd() / path).resolve()
     return path
 #| eval: true
-def read_file_tool(filename: str) -> Dict[str, Any]:
+def read_file_tool(filename: str) -> dict[str, Any]:
     """
     Gets the full content of a file provided by the user.
     :param filename: The name of the file to read.
@@ -51,7 +51,7 @@ def read_file_tool(filename: str) -> Dict[str, Any]:
         content = f.read()
     return {"file_path": str(full_path), "content": content}
 #| eval: true
-def list_files_tool(path: str) -> Dict[str, Any]:
+def list_files_tool(path: str) -> dict[str, Any]:
     """
     Lists the files in a directory provided by the user.
     :param path: The path to a directory to list files from.
@@ -66,7 +66,7 @@ def list_files_tool(path: str) -> Dict[str, Any]:
         })
     return {"path": str(full_path), "files": all_files}
 #| eval: true
-def edit_file_tool(path: str, old_str: str, new_str: str) -> Dict[str, Any]:
+def edit_file_tool(path: str, old_str: str, new_str: str) -> dict[str, Any]:
     """
     Replaces first occurrence of old_str with new_str in file. If old_str is empty,
     create/overwrite file with new_str.
@@ -86,7 +86,7 @@ def edit_file_tool(path: str, old_str: str, new_str: str) -> Dict[str, Any]:
     full_path.write_text(edited, encoding="utf-8")
     return {"path": str(full_path), "action": "edited"}
 #| eval: true
-def dump_conversation_tool() -> Dict[str, Any]:
+def dump_conversation_tool() -> dict[str, Any]:
     """
     Writes the entire running conversation to ./conversation-dump.md in the
     current working directory, overwriting any previous dump. Each turn is
@@ -151,7 +151,7 @@ If no tool is needed, respond normally.
 """
 get_full_system_prompt()
 #| eval: true
-def extract_tool_invocations(text: str) -> List[Tuple[str, Dict[str, Any]]]:
+def extract_tool_invocations(text: str) -> list[tuple[str, dict[str, Any]]]:
     """
     Return list of (tool_name, args) requested in 'tool: name({...})' lines.
     """
@@ -169,12 +169,13 @@ def extract_tool_invocations(text: str) -> List[Tuple[str, Dict[str, Any]]]:
             json_str = rest[:-1].strip()
             args = json.loads(json_str)
             invocations.append((name, args))
-        except Exception:
+        except ValueError:
+            # Malformed tool line (bad split or invalid JSON), skip it.
             continue
     return invocations
 #| eval: true
 #| label: exec-llm-call
-def execute_llm_call(conversation: List[Dict[str, str]]):
+def execute_llm_call(conversation: list[dict[str, str]]):
     """
     Send the full conversation (including the system message) to the Duke AI
     Proxy and return the assistant's reply as a plain string.
