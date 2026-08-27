@@ -1,0 +1,20 @@
+[workspace]
+authors = ["Steven G. Rozen <steverozen@pm.me>"]
+channels = ["conda-forge"]
+name = "diy-harness-2026"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = ">=3.14.4,<3.15"
+openai = ">=3.3.0,<4"
+python-dotenv = ">=1.2.3,<2"
+pyprojroot = ">=0.3.0,<0.4"
+boto3 = ">=1.43.9,<2"
+anthropic = ">=0.105.2,<0.106"
+jupyter = ">=1.1.1,<2"
+numpy = ">=2.4.6,<3"
+pandas = ">=3.0.3,<4"
+polars = ">=1.41.2,<2"

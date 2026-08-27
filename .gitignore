@@ -11,3 +11,6 @@ __pycache__/
 # Scratch
 foo
 0foo
+
+# pixi
+.pixi/
