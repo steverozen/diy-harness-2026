@@ -1,18 +1,26 @@
 #!/usr/bin/env -S pixi run python
+"""Minimal DIY coding-agent harness talking to the Duke AI Proxy.
 
+Runs an interactive chat loop with simple file tools (read_file, list_files,
+edit_file) exposed to the model through the system prompt.
+"""
+
+import argparse
 import inspect
 import json
 import os
+import sys
 from pathlib import Path
 from typing import Any
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import OpenAI, OpenAIError
 
 load_dotenv()
 
 DUKE_BASE_URL = "https://aiproxy.duhs.duke.edu/v1"
-DUKE_MODEL = "glm-5.2"  # "gpt-5.3-codex"
+DUKE_MODEL = "glm-5.2"
+ALL_CONVERSATION = False
 
 duke_client = OpenAI(
     api_key=os.environ["DUKE_LITELLM_API_KEY"],
@@ -167,12 +175,13 @@ def execute_llm_call(conversation: list[dict[str, str]]):
     """
     global LLM_CALL_COUNTER
     LLM_CALL_COUNTER += 1
-    print(
-        f"\n\n\n\n\n================================================\n"
-        f"LLM CALL COUNTER: {LLM_CALL_COUNTER}\n"
-        f"================================================\n\n\nSending conversation: "
-    )
-    print(json.dumps(conversation, indent=2))
+    if ALL_CONVERSATION:
+        print(
+            f"\n\n\n\n\n================================================\n"
+            f"LLM CALL COUNTER: {LLM_CALL_COUNTER}\n"
+            f"================================================\n\n\nSending conversation: "
+        )
+        print(json.dumps(conversation, indent=2))
 
     response = duke_client.chat.completions.create(
         model=DUKE_MODEL,
@@ -204,7 +213,9 @@ def run_coding_agent_loop():
             for name, args in tool_invocations:
                 tool = TOOL_REGISTRY[name]
                 resp = ""
-                print(name, args)
+                print("-" * 40)
+                print("TOOL CALL:", name, args)
+                print("-" * 40)
                 if name == "read_file":
                     resp = tool(args.get("filename", "."))
                 elif name == "list_files":
@@ -220,6 +231,39 @@ def run_coding_agent_loop():
                 )
 
 
+def get_available_models() -> list[str]:
+    """Return the model names offered by the Duke AI Proxy."""
+    try:
+        return sorted(m.id for m in duke_client.models.list())
+    except OpenAIError as e:
+        return [f"(could not fetch model list: {e})"]
+
+
+def parse_args() -> argparse.Namespace:
+    epilog = None
+    if "-h" in sys.argv or "--help" in sys.argv:
+        epilog = "available models:\n  " + "\n  ".join(get_available_models())
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        epilog=epilog,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--all-conversation",
+        action="store_true",
+        help="print the full conversation sent to the LLM on every call",
+    )
+    parser.add_argument(
+        "--model",
+        default="glm-5.2",
+        help="model to use (see available models under --help)",
+    )
+    return parser.parse_args()
+
+
 #| eval: true
 if __name__ == "__main__":
+    args = parse_args()
+    ALL_CONVERSATION = args.all_conversation
+    DUKE_MODEL = args.model
     run_coding_agent_loop()
