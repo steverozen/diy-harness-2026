@@ -34,9 +34,9 @@ and `extract_tool_invocations()` finds those lines with string parsing and
 interesting part: it makes the mechanism visible, and it shows how much of an
 agent is prompt convention rather than infrastructure.
 
-Every request prints the entire conversation being sent, prefixed with a call
-counter. Watching that JSON grow is the fastest way to understand why context
-windows fill up and why agents get expensive.
+With `--all-conversation`, every request prints the entire conversation being
+sent, prefixed with a call counter. Watching that JSON grow is the fastest way
+to understand why context windows fill up and why agents get expensive.
 
 ## Running it
 
@@ -45,13 +45,15 @@ Duke AI proxy, which is a LiteLLM gateway:
 
 ```python
 DUKE_BASE_URL = "https://aiproxy.duhs.duke.edu/v1"
-DUKE_MODEL = "gpt-5.1"
 ```
 
 Point `DUKE_BASE_URL` at any other OpenAI-compatible endpoint, including
 `https://api.openai.com/v1` or a local server, and it will work unchanged.
 
 Copy `.env.example` to `.env` and fill in your key. `.env` is gitignored.
+`duke-diy-harness.py` needs only `DUKE_LITELLM_API_KEY`. The
+`ANTHROPIC_API_KEY` entry is for `emperor-has-no-clothes.py`, which calls the
+Anthropic API directly, and can be left blank otherwise.
 
 With [pixi](https://pixi.sh):
 
@@ -67,6 +69,14 @@ are somewhere inside this repository.)
 
 Without pixi, any Python 3.11+ with `openai`, `python-dotenv` and `anthropic`
 installed will do.
+
+Command-line arguments:
+
+| Argument | What it does |
+|---|---|
+| `--model MODEL` | Model to use (default `glm-5.2`) |
+| `--all-conversation` | Print the full conversation sent to the LLM on every call |
+| `-h`, `--help` | Print usage plus the list of models available on the proxy |
 
 Then talk to it:
 
