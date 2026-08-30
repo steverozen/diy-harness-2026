@@ -1,10 +1,11 @@
 # diy-harness-2026
 
-A coding agent, written from scratch in about 200 lines of Python, to show what
-an agentic coding tool actually is underneath.
+A coding harness (AI coding agent), written from scratch in 
+a few hundred lines of Python, to show 
+how and agentic coding tool system works.
 
 The point of this repository is pedagogical. Tools like Claude Code and Cursor
-can look like magic. They are not. Strip away the interface and an agent is a
+look like magic. They are not. Strip away the interface and an agent is a
 loop that sends a conversation to a language model, notices when the model asks
 for a tool, runs it, appends the result to the conversation, and repeats. That
 loop is `run_coding_agent_loop()` in `duke-diy-harness.py`, and you can read the
@@ -12,7 +13,7 @@ whole thing in one sitting.
 
 ## What it does
 
-The harness gives the model three tools and nothing else:
+The basic harness `duke-diy-harness.py` gives the model just three tools:
 
 | Tool | What it does |
 |---|---|
@@ -30,9 +31,8 @@ tool: read_file({"filename": "hello.py"})
 ```
 
 and `extract_tool_invocations()` finds those lines with string parsing and
-`json.loads`. Doing it by hand rather than through a structured API is the
-interesting part: it makes the mechanism visible, and it shows how much of an
-agent is prompt convention rather than infrastructure.
+`json.loads`. Doing it by hand rather than through a structured API 
+makes the mechanism visible.
 
 With `--all-conversation`, every request prints the entire conversation being
 sent, prefixed with a call counter. Watching that JSON grow is the fastest way
@@ -94,8 +94,8 @@ Ctrl-D or Ctrl-C exits.
 | `duke-diy-harness.py` | The harness. Start here. |
 | `duke-diy-harness.qmd` | The Quarto source the `.py` is generated from, with the narrative |
 | `duke-diy-harness-dump.py` / `.qmd` | An earlier variant that dumps more diagnostic detail |
-| `emperor-has-no-clothes.qmd` / `.py` / `.html` | A companion piece on how little there is behind the curtain |
-| `ball-how-to-build-an-agent.html` | Reference notes |
+| `emperor-has-no-clothes.qmd` / `.py` / `.html` | The base of the code in this repo, originally published at `https://www.mihaileric.com/The-Emperor-Has-No-Clothes/`, which was apparently based on Thorston Ball's How to Build an Agent (next line) |
+| `ball-how-to-build-an-agent.html` | Copy of `https://ampcode.com/notes/how-to-build-an-agent` |
 | `2026-06-01-diy-harness-summary.md` | Summary of what was learned building it |
 | `conversation-dump.md` | An example session transcript |
 | `hello.py` | A toy file to point the agent at |
@@ -119,15 +119,21 @@ from the `DUKE_LITELLM_API_KEY` environment variable, never stored in the file):
 
 ## Caveats
 
-This is teaching code, not a tool to rely on.
+Teaching code! Do not use this in production.
 
-`edit_file` writes to whatever path the model asks for, with no sandbox, no
-confirmation, and no diff shown first. Run it against a scratch directory or a
-repository whose state is committed, never against anything you cannot restore.
+THe `edit_file` tool run by the demo harnesses in this repo
+writes to whatever path the model asks for.
+There no sandbox, no
+confirmation, and no diff shown first. 
+Never run against anything you cannot restore.
+Run it against a scratch directory or a
+repository whose state is committed.
 
+The harnesses here is a minimal teaching example.
 There is also no retry logic, no token accounting, no streaming, no context
-compaction, and no test suite. Each of any of these would
-be a reasonable teaching exercise.
+compaction, and no test suite. 
+
+You could add any of these as a learning exercise.
 
 ## Licence
 
