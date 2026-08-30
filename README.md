@@ -129,7 +129,7 @@ Never run against anything you cannot restore.
 Run it against a scratch directory or a
 repository whose state is committed.
 
-The harnesses here is a minimal teaching example.
+The harnesses here are minimal teaching examples.
 There is also no retry logic, no token accounting, no streaming, no context
 compaction, and no test suite. 
 
