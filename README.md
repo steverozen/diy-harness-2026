@@ -1,14 +1,15 @@
 # diy-harness-2026
 
 A coding harness (AI coding agent), written from scratch in 
-a few hundred lines of Python, to show 
+< 300 lines of Python, to show 
 how and agentic coding tool system works.
 
 The point of this repository is pedagogical. Tools like Claude Code and Cursor
 look like magic. They are not. Strip away the interface and an agent is a
 loop that sends a conversation to a language model, notices when the model asks
 for a tool, runs it, appends the result to the conversation, and repeats. That
-loop is `run_coding_agent_loop()` in `duke-diy-harness.py`, and you can read the
+loop is `run_coding_agent_loop()` in `duke-diy-harness.py`.
+You can read the
 whole thing in one sitting.
 
 ## What it does
